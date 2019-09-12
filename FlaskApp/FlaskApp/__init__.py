@@ -6,6 +6,11 @@ import datetime
 
 app = Flask(__name__)
 
+
+@app.route('/hw1.yml', methods=['GET', 'POST'])
+def show_yml():
+	return render_template('hw1.yml')
+
 @app.route('/ttt/', methods=['GET', 'POST'])
 def index():
 	if request.method == 'POST':

@@ -1,0 +1,50 @@
+---
+- hosts: hw1
+  sudo: yes
+  tasks:
+    - name: install apache2
+      apt: name=apache2 update_cache=yes state=latest
+
+    - name: enabled mod_rewrite
+      apache2_module: name=rewrite state=present
+      notify:
+        - restart apache2
+    - name: install python pip
+      apt: name=python-pip
+    - name: install python3 pip
+      apt: name=python3-pip
+    - name: update setup tools
+      shell: pip3 install --upgrade setuptools
+    - name: install flask with pip3
+      pip: name=flask
+    - name: install virtual enviroment
+      pip: name=virtualenv
+    - name: set up virtual enviroment
+      shell: virtualenv /var/www/
+    - name: install mod_wsgi
+      apt: name=libapache2-mod-wsgi
+    - name: start wsgi
+      shell: a2enmod wsgi
+    - name: remove html autogen file
+      file:
+        path: /var/www/html/index.html
+        state: absent
+    - name: remove html directory
+      file:
+        path: /var/www/html
+        state: absent
+    - name: get git repo
+      git: repo=git://github.com/BaccarellaD/tic_tac_toe.git dest=/var/www/ force=yes
+    - name: remove sites-availible files
+      shell: rm -rf /etc/apache2/sites-available/*.conf
+    - name: get apache config repo
+      git: repo=git://github.com/BaccarellaD/apache_config.git dest=/etc/apache2/sites-available/ force=yes
+    - name: enable wsgi
+      shell: a2enmod wsgi
+      notify:
+        - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+
