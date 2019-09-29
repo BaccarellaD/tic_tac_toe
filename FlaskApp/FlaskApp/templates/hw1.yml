@@ -9,22 +9,6 @@
       apache2_module: name=rewrite state=present
       notify:
         - restart apache2
-    - name: install python pip
-      apt: name=python-pip
-    - name: install python3 pip
-      apt: name=python3-pip
-    - name: update setup tools
-      shell: pip3 install --upgrade setuptools
-    - name: install flask with pip3
-      pip: name=flask
-    - name: install virtual enviroment
-      pip: name=virtualenv
-    - name: set up virtual enviroment
-      shell: virtualenv /var/www/
-    - name: install mod_wsgi
-      apt: name=libapache2-mod-wsgi
-    - name: start wsgi
-      shell: a2enmod wsgi
     - name: remove html autogen file
       file:
         path: /var/www/html/index.html
@@ -39,8 +23,6 @@
       shell: rm -rf /etc/apache2/sites-available/*.conf
     - name: get apache config repo
       git: repo=git://github.com/BaccarellaD/apache_config.git dest=/etc/apache2/sites-available/ force=yes
-    - name: enable wsgi
-      shell: a2enmod wsgi
       notify:
         - restart apache2
 
