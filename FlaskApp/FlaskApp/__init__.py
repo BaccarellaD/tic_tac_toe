@@ -155,8 +155,9 @@ def show_yml():
 	return render_template('hw1.yml')
 
 @app.route('/listgames', methods=['POST'])
+@login_required
 def show_games():
-	games = list(mongo.db.games.find())
+	games = list(mongo.db.games.find({'username': current_user.username}))
 	send_dict = {}
 	send_dict['status'] = "OK"
 	games_list = []
@@ -167,8 +168,9 @@ def show_games():
 	return jsonify(send_dict)
 
 @app.route('/getscore', methods=['POST'])
+@login_required
 def get_scores():
-	games = list(mongo.db.games.find())
+	games = list(mongo.db.games.find({'username': current_user.username}))
 
 	ties = 0
 	p_wins = 0
