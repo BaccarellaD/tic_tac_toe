@@ -231,7 +231,8 @@ def play():
 		current_user.start_new_game()
 	grid = current_user.board
 	print(current_user.username)
-	grid[int(move)] = 'X'
+	if move is not None:
+		grid[int(move)] = 'X'
 	winner = check_win(grid)
 	full = board_full(grid)
 
