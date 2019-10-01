@@ -182,9 +182,9 @@ def get_scores():
 			ties += 1
 		else:
 			winner = check_win(board)
-			if winner == 'o':
+			if winner == 'O':
 				comp_wins += 1
-			elif winner == 'x':
+			elif winner == 'X':
 				p_wins += 1
 
 	send_dict = {}
@@ -231,7 +231,7 @@ def play():
 		current_user.start_new_game()
 	grid = current_user.board
 	print(current_user.username)
-	grid[int(move)] = 'x'
+	grid[int(move)] = 'X'
 	winner = check_win(grid)
 	full = board_full(grid)
 
@@ -269,7 +269,7 @@ def pick_ai_spot(grid):
 		if grid[x] == ' ':
 			valid_points.append(x)
 	rand = randrange(len(valid_points))
-	grid[valid_points[rand]] = 'o'
+	grid[valid_points[rand]] = 'O'
 	return grid
 
 def check_win(grid):
