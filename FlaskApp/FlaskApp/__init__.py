@@ -232,6 +232,7 @@ def play():
 	move = json['move']
 	if not current_user.game_active:
 		current_user.start_new_game()
+		current_user.save()
 	grid = current_user.board
 	print(current_user.username)
 	if move is not None:
@@ -239,8 +240,13 @@ def play():
 	winner = check_win(grid)
 	full = board_full(grid)
 
+	if move is None:
+		response = {'status': 'OK', 'winner': winner, 'grid': grid}
+		current_user.save()
+		return jsonify(response)
+
 	if move is None or full or winner != ' ': #return the current board state
-		response = {'winner': winner, 'grid': grid}
+		response = {'status': 'OK', 'winner': winner, 'grid': grid}
 		current_user.start_new_game()
 		current_user.save()
 		return jsonify(response)
@@ -251,12 +257,12 @@ def play():
 	current_user.board = grid
 	if winner != ' ' or full: #return winner and grid
 		print('game over!')
-		response = {'winner': winner, 'grid': grid}
+		response = {'status': 'OK', 'winner': winner, 'grid': grid}
 		current_user.start_new_game()
 		current_user.save()
 		return jsonify(response)
 	#return no winner and grid
-	response = {'winner': winner, 'grid': grid}
+	response = {'status': 'OK', 'winner': winner, 'grid': grid}
 	print(grid)
 	current_user.save()
 	return jsonify(response)
