@@ -26,13 +26,13 @@ app.config['MONGODB_SETTINGS'] = {
 app.config["MONGO_URI"] =  'mongodb://localhost:27017/ttt'
 
 app.config['MAIL_SERVER'] = '127.0.0.1'
-pp.config['MAIL_PORT'] = 25
+app.config['MAIL_PORT'] = 25
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'ubuntu'
 app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_MAX_EMAILS'] = None
-#app.config['MAIL_DEFAULT_SENDER'] = 'dbacctesting@gmail.com'
+app.config['MAIL_DEFAULT_SENDER'] = 'ubuntu@cloud.compas.stonybrook.edu'
 
 mail = Mail(app)
 mongo = PyMongo(app)
