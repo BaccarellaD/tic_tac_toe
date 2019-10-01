@@ -124,11 +124,13 @@ def doLogin():
 	print(user)
 	print(user['username'])
 	print(user['password'])
+	password = user['password']
 	users = mongo.db.users
 	user = users.find_one({'username' : user['username']})
 	if user is not None:
 		user_instance = User.load(user['username'])
-		if user['password'] == user_instance.password and user_instance.confirmed:
+		print(password == user_instance.password)
+		if password == user_instance.password and user_instance.confirmed:
 			login_user(user_instance)
 			send_dict = {}
 			send_dict['status'] = "OK"
