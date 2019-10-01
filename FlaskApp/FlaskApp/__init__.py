@@ -113,10 +113,9 @@ def addUser(): #username:, password:, email:
 @login_required
 def do_logout():
 	logout_user()
-        send_dict = {}
-        send_dict['status'] = "OK"
-        return jsonify(send_dict)
-
+	send_dict = {}
+	send_dict['status'] = "OK"
+	return jsonify(send_dict)
 
 @app.route('/login', methods=['POST'])
 def doLogin():
