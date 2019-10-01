@@ -6,8 +6,8 @@ from flask import Flask, render_template, request, jsonify, redirect, Response
 from random import randrange
 from threading import Thread
 import datetime
-from forms import RegistrationForm, LoginForm
-from user import User
+from .forms import RegistrationForm, LoginForm
+from .user import User
 from flask_mail import Mail, Message
 from flask_pymongo import PyMongo
 from flask_login import LoginManager
@@ -25,14 +25,14 @@ app.config['MONGODB_SETTINGS'] = {
 #app.config['MONGO_DBNAME'] = 'ttt'
 app.config["MONGO_URI"] =  'mongodb://localhost:27017/ttt'
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USERNAME'] = 'dbacctesting@gmail.com'
+app.config['MAIL_SERVER'] = '127.0.0.1'
+pp.config['MAIL_PORT'] = 25
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'ubuntu'
 app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_MAX_EMAILS'] = None
-app.config['MAIL_DEFAULT_SENDER'] = 'dbacctesting@gmail.com'
+#app.config['MAIL_DEFAULT_SENDER'] = 'dbacctesting@gmail.com'
 
 mail = Mail(app)
 mongo = PyMongo(app)
@@ -108,6 +108,15 @@ def addUser(): #username:, password:, email:
 	send_dict = {}
 	send_dict['status'] = "OK"
 	return jsonify(send_dict)
+
+@app.route('/logout', methods=['POST'])
+@login_required
+def do_logout():
+	logout_user()
+        send_dict = {}
+        send_dict['status'] = "OK"
+        return jsonify(send_dict)
+
 
 @app.route('/login', methods=['POST'])
 def doLogin():

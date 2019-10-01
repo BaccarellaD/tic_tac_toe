@@ -22,7 +22,7 @@ class User(UserMixin, ):
             self.load_active_game(active_game_id)
 
     def save(self):
-        from __init__ import mongo
+        from .__init__ import mongo
         users = mongo.db.users
         user = users.find_one({'username' : self.username})
         confirmed = str(self.confirmed)
@@ -38,7 +38,7 @@ class User(UserMixin, ):
             self.save_game()
 
     def load_active_game(self, active_game_id):
-        from __init__ import mongo
+        from .__init__ import mongo
         games = mongo.db.games
         game = games.find_one({'game_id' : self.active_game_id})
 
@@ -51,7 +51,7 @@ class User(UserMixin, ):
             print('TRIED TO LOAD A GAME THAT DOES NOT EXIST')
 
     def save_game(self):
-        from __init__ import mongo
+        from .__init__ import mongo
         games = mongo.db.games
         game = games.find_one({'game_id' : self.active_game_id})
 
@@ -74,7 +74,7 @@ class User(UserMixin, ):
 
     @staticmethod
     def load(username):
-        from __init__ import mongo
+        from .__init__ import mongo
         users = mongo.db.users
         user = users.find_one({'username': username})
         if user is None:
