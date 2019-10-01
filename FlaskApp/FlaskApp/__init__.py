@@ -291,7 +291,7 @@ def check_win(grid):
 		return grid[6]
 	elif grid[0] == grid[4] == grid[8] and grid[0] != ' ':
 		return grid[0]
-	elif grid[2] == grid[4] == grid[8] and grid[2] != ' ':
+	elif grid[2] == grid[4] == grid[6] and grid[2] != ' ':
 		return grid[2]
 
 	return ' '
