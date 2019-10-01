@@ -1,0 +1,36 @@
+<body>
+    <div class="content-section">
+        <form method="POST" action="javascript:addUser(username.value, password.value, email.value)">
+            <fieldset>
+                <legend>Sign Up</legend>
+                {{ form.username.label() }}
+                {{ form.username() }}
+                <br/>
+                {{ form.email.label() }}
+                {{ form.email() }}
+                <br/>
+                {{ form.password.label() }}
+                {{ form.password() }}
+                <br/>
+                {{ form.confirm_password.label() }}
+                {{ form.confirm_password() }}
+                <br/>
+                {{ form.submit() }}
+            </fieldset>
+        </form>
+    </div>
+</body>
+
+<script type="text/javascript">
+    function addUser(username, password, email){
+        var dict = {};
+        dict['username'] = username;
+        dict['password'] = password;
+        dict['email'] = email;
+        var json = JSON.stringify(dict);
+        var request = new XMLHttpRequest();
+        request.open("POST", "/adduser");
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(json);
+    }
+</script>

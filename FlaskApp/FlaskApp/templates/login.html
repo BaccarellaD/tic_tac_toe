@@ -1,0 +1,29 @@
+<body>
+    <div class="content-section">
+        <form method="POST" action="javascript:login(username.value, password.value)">
+            <fieldset>
+                <legend>Sign Up</legend>
+                {{ form.username.label() }}
+                {{ form.username() }}
+                <br/>
+                {{ form.password.label() }}
+                {{ form.password() }}
+                <br/>
+                {{ form.submit() }}
+            </fieldset>
+        </form>
+    </div>
+</body>
+
+<script type="text/javascript">
+    function login(username, password){
+        var dict = {};
+        dict['username'] = username;
+        dict['password'] = password;
+        var json = JSON.stringify(dict);
+        var request = new XMLHttpRequest();
+        request.open("POST", "/login");
+        request.setRequestHeader("Content-Type", "application/json");
+        request.send(json);
+    }
+</script>
