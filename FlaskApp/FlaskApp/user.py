@@ -34,7 +34,7 @@ class User(UserMixin, ):
             users.replace_one({'username' : self.username},
                               {'username' : self.username, 'email' : self.email, 'password' : self.password, 'auth_string' : self.auth_string, 'confirmed' : confirmed, '_id' : self._id, 'game_active' : game_active, 'game_id' : self.active_game_id})
 
-        if game_active:
+        if self.game_active:
             self.save_game()
 
     def load_active_game(self, active_game_id):
