@@ -223,8 +223,11 @@ def index():
 	return render_template('name.html')
 
 @app.route('/ttt/play', methods=['POST'])
-@login_required
 def play():
+	if not current_user.is_authenticated:
+		send_dict = {}
+		send_dict['status'] = "ERROR"
+		return jsonify(send_dict)
 	json = request.get_json()
 	move = json['move']
 	if not current_user.game_active:
