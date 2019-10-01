@@ -98,7 +98,7 @@ def addUser(): #username:, password:, email:
 		return redirect("/login", code=302) # if the user account exists go to redirect
 	key = binascii.hexlify(os.urandom(24)).decode("utf-8")
 	user_instance = User(user['username'], user['email'], user['password'], key)
-	user_instance.start_new_game()
+	#user_instance.start_new_game()
 	user_instance.save()
 	#Send email
 	msg = Message(subject='Test Email From Server', recipients=[user['email']])
@@ -225,6 +225,8 @@ def index():
 def play():
 	json = request.get_json()
 	move = json['move']
+	if not current_user.game_active:
+		current_user.start_new_game()
 	grid = current_user.board
 	print(current_user.username)
 	grid[int(move)] = 'x'
