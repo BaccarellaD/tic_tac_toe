@@ -13,6 +13,7 @@ from flask_pymongo import PyMongo
 from flask_login import LoginManager
 from flask_login import current_user, login_user, logout_user, login_required
 import json
+import pika
 
 app = Flask(__name__)
 
@@ -44,6 +45,17 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
 	return User.load(user_id)
+
+@app.route('/listen', methods=['POST'])
+def listenMQ():
+	connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+	channel = connection.channel()
+	
+
+@app.route('/speak', methods=['POST'])
+def speakMQ():
+	pass
+
 
 @app.route('/register-me')
 def registerForm():
