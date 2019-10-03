@@ -42,10 +42,10 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-channel = connection.channel()
-channel.exchange_declare(exchange='hw4',
-                         exchange_type='direct')
+#connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+#channel = connection.channel()
+#channel.exchange_declare(exchange='hw4',
+#                         exchange_type='direct')
 
 
 @login_manager.user_loader
@@ -54,20 +54,44 @@ def load_user(user_id):
 
 @app.route('/listen', methods=['POST'])
 def listenMQ():
+	print('listen called')
+	connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+	channel = connection.channel()
+	channel.exchange_declare(exchange='hw4',
+                         exchange_type='direct')
 	json = request.get_json()
 	keys = json['keys']
-	result = channel.queue_declare(queue='', exchangeName='hw4', exclusive=True)
+	result = channel.queue_declare(queue='', durable=False, exclusive=True)
 	queue_name = result.method.queue
 	for key in keys:
 		channel.queue_bind(exchange='hw4', queue=queue_name, routing_key=key)
+	channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+	print("Gonna C O N S U M E")
+	channel.start_consuming()
+	return jsonify({"status" : "OK"})
+
+def callback(ch, method, properties, body):
+	print('callback started')
+	msg = jsonify({'msg' : body})
+	ch.basic_publish(exchange='hw4', body=msg)
+	ch.basic_ack(delivery_tag=method.delivery_tag)
+	print('got to callback')
+	ch.close()
 
 @app.route('/speak', methods=['POST'])
 def speakMQ():
+	print('speak called')
+	connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+	channel = connection.channel()
+	channel.exchange_declare(exchange='hw4',
+                         exchange_type='direct')
 	json = request.get_json()
+	print(json)
 	key = json['key']
 	msg = json['msg']
-	channel.basic_publish(exchange='logs', routing_key=key, body=msg)
-
+	channel.basic_publish(exchange='hw4', routing_key=key, body=msg)
+	connection.close()
+	return jsonify({"status" : "OK"})
 
 @app.route('/register-me')
 def registerForm():
