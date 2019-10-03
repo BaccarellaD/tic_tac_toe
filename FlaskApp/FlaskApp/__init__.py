@@ -42,19 +42,31 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
+channel.exchange_declare(exchange='hw4',
+                         exchange_type='direct')
+
+
 @login_manager.user_loader
 def load_user(user_id):
 	return User.load(user_id)
 
 @app.route('/listen', methods=['POST'])
 def listenMQ():
-	connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-	channel = connection.channel()
-	
+	json = request.get_json()
+	keys = json['keys']
+	result = channel.queue_declare(queue='', exchangeName='hw4', exclusive=True)
+	queue_name = result.method.queue
+	for key in keys:
+		channel.queue_bind(exchange='hw4', queue=queue_name, routing_key=key)
 
 @app.route('/speak', methods=['POST'])
 def speakMQ():
-	pass
+	json = request.get_json()
+	key = json['key']
+	msg = json['msg']
+	channel.basic_publish(exchange='logs', routing_key=key, body=msg)
 
 
 @app.route('/register-me')
